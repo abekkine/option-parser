@@ -4,12 +4,15 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <iostream>
+#include <cctype>
 
 class OptionParser {
 private:
     // members
     std::string name_;
     std::vector<std::string> options_;
+    std::vector<std::string> params_;
 
 public:
     // methods
@@ -17,11 +20,29 @@ public:
         name_ = std::string(argv[0]);
         if (argc > 1) {
             for (int i=1; i<argc; ++i) {
-                options_.push_back(std::string(argv[i]));
+                std::string temp = argv[i];
+                if(temp[0] == '-' && !(std::isdigit(temp[1]))) {
+                    options_.push_back(std::string(temp));
+                }
+                else {
+                    params_.push_back(std::string(temp));
+                }
             }
         }
     }
     ~OptionParser() {}
+
+    bool HasParams() {
+        return ( params_.size() > 0);
+    }
+
+    std::string GetParam(int index) {
+        if(index >= params_.size()){
+            throw std::string("No such parameter exists!");
+        }
+        return params_[index];
+    }
+
     bool HasOptions() {
         return (! options_.empty());
     }
