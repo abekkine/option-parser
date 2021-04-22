@@ -36,7 +36,7 @@ TEST_CASE("Command only", "[test]") {
 
 TEST_CASE("Mixed operation", "[test]") {
     // Setup test values...
-    int argc = 16;
+    int argc = 18;
     char *argv[] = {
         (char *)"appName.exe",
         (char *)"--test",
@@ -55,7 +55,9 @@ TEST_CASE("Mixed operation", "[test]") {
         // Following term should appear as --desc="Two Word" on command line.
         (char *)"--desc=Two Word",
         (char *)"---321", //param 6
-        (char *)"----1234" //param7
+        (char *)"----1234", //param 7
+        (char *)"-abc",
+        (char *)"---abc"
     };
 
     // Create instance...
@@ -72,6 +74,10 @@ TEST_CASE("Mixed operation", "[test]") {
     REQUIRE( parser.HasFlag("--verbose") == true );
     REQUIRE( parser.HasFlag("--quit") == true );
     REQUIRE( parser.HasFlag("--area") == false);
+    REQUIRE( parser.HasFlag("-abc") == true);
+    REQUIRE( parser.HasFlag("---abc") == true);
+    REQUIRE( parser.HasFlag("--123") == false);
+    REQUIRE( parser.HasFlag("----1234") == false);
 
     // Check if HasValue() working properly...
     // .. Check name
@@ -108,6 +114,8 @@ TEST_CASE("Mixed operation", "[test]") {
     CHECK( parser.GetParam(6) == "---321" );
     // .. Get eight parameter
     CHECK( parser.GetParam(7) == "----1234" );
+
+
 
     // Positional variables should not work as flags..
     REQUIRE( parser.HasFlag("-1.0") == false );
