@@ -69,6 +69,7 @@ TEST_CASE("Mixed operation", "[test]") {
     REQUIRE( parser.HasFlag("--test") == true );
     REQUIRE( parser.HasFlag("--verbose") == true );
     REQUIRE( parser.HasFlag("--quit") == true );
+    REQUIRE( parser.HasFlag("--area") == false);
 
     // Check if HasValue() working properly...
     // .. Check name
