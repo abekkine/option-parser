@@ -21,7 +21,7 @@ public:
         if (argc > 1) {
             for (int i=1; i<argc; ++i) {
                 std::string temp = argv[i];
-                if(temp[0] == '-' && !(std::isdigit(temp[1]))) {
+                if(temp[0] == '-' && !(std::isdigit(temp[1])) && !(std::isdigit(temp[2])) ) {
                     options_.push_back(std::string(temp));
                 }
                 else {
@@ -64,27 +64,42 @@ public:
         return false;
     }
     double GetDouble(const std::string & option) {
-        double value = 0.0;
-        value = std::stod(GetString(option));
-        return value;
+        if(HasValue(option)) {
+            double value = 0.0;
+            value = std::stod(GetString(option));
+            return value;
+        }
+        else {
+            throw std::string("Values should not be queried for flag options.");
+        }
     }
     int GetInteger(const std::string & option) {
-        int value = 0;
-        value = std::stoi(GetString(option));
-        return value;
+        if(HasValue(option)) {
+            int value = 0;
+            value = std::stoi(GetString(option));
+            return value;
+        }
+        else {
+            throw std::string("Values should not be queried for flag options.");
+        }
     }
     std::string GetString(const std::string & option) {
-        std::string param = option + "=";
-        std::string value = "";
-        for (auto op : options_) {
-            if (op.rfind(param, 0) == 0) {
-                std::size_t ePos = op.find("=");
-                ++ePos;
-                value = op.substr(ePos);
-                break;
+        if(HasValue(option)) {
+            std::string param = option + "=";
+            std::string value = "";
+            for (auto op : options_) {
+                if (op.rfind(param, 0) == 0) {
+                    std::size_t ePos = op.find("=");
+                    ++ePos;
+                    value = op.substr(ePos);
+                    break;
+                }
             }
+            return std::move(value);
         }
-        return std::move(value);
+        else {
+            throw std::string("Values should not be queried for flag options.");
+        }
     }
 };
 
