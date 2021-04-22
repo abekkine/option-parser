@@ -4,6 +4,6 @@ project(optParserTest)
 
 set(CXX_STANDARD 11)
 
-include_directories($ENV{EXT_LIB_DIR}/catch)
+include_directories($ENV{EXT_LIB_DIR}/catch2)
 
 add_executable(test test.cpp catch.cpp)

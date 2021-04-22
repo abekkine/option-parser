@@ -36,7 +36,7 @@ TEST_CASE("Command only", "[test]") {
 
 TEST_CASE("Mixed operation", "[test]") {
     // Setup test values...
-    int argc = 14;
+    int argc = 16;
     char *argv[] = {
         (char *)"appName.exe",
         (char *)"--test",
@@ -53,7 +53,9 @@ TEST_CASE("Mixed operation", "[test]") {
         (char *)"--area=14.285",
         (char *)"--label=NONE",
         // Following term should appear as --desc="Two Word" on command line.
-        (char *)"--desc=Two Word"
+        (char *)"--desc=Two Word",
+        (char *)"---321", //param 6
+        (char *)"----1234" //param7
     };
 
     // Create instance...
@@ -102,17 +104,24 @@ TEST_CASE("Mixed operation", "[test]") {
     CHECK( parser.GetParam(4) == "--123" );
     // .. Get sixth parameter
     CHECK( parser.GetParam(5) == "word" );
+    // .. Get seventh parameter
+    CHECK( parser.GetParam(6) == "---321" );
+    // .. Get eight parameter
+    CHECK( parser.GetParam(7) == "----1234" );
 
     // Positional variables should not work as flags..
     REQUIRE( parser.HasFlag("-1.0") == false );
     REQUIRE( parser.HasFlag("3.14159") == false );
     REQUIRE( parser.HasFlag("word") == false );
+    REQUIRE( parser.HasFlag("---321") == false);
+     REQUIRE( parser.HasFlag("----1234") == false);
 
     // If given index is greater than the number of positional parameters, throw.
     REQUIRE_THROWS_AS( parser.GetParam(argc + 2), std::string );
 
     // Flag options should not be used as value options.
     CHECK( parser.HasValue("--quit") == false );
+    CHECK( parser.HasValue("---321") == false );
 
     // Values should not be queried for flag options.
     CHECK_THROWS_AS( parser.GetInteger("--quit"), std::string );
