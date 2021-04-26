@@ -19,21 +19,19 @@ public:
     OptionParser(const int argc, char **argv) {
         name_ = std::string(argv[0]);
         if (argc > 1) {
-            int index_=0;
             for (int i=1; i<argc; ++i) {
                 std::string temp = argv[i];
-                for(int i = 0; i < temp.length() ; i++) {
-                    if(temp[i] == '-') {
-                        index_++;
-                    }
-                }
-                if(temp[0] == '-' && !(std::isdigit(temp[index_])) ) {
-                    options_.push_back(std::string(temp));
-                }
-                else {
+                if((temp[0] != '-') || (temp[0] == '-' && temp[1] != '-')) {
                     params_.push_back(std::string(temp));
                 }
-                index_ = 0;
+                else {
+                    if(temp[2] == '-' || std::isdigit(temp[2])) {
+                        params_.push_back(std::string(temp));
+                    }
+                    else {
+                        options_.push_back(std::string(temp));
+                    }
+                }
             }
         }
     }
