@@ -74,11 +74,13 @@ TEST_CASE("Mixed operation", "[test]") {
     REQUIRE( parser.HasFlag("--verbose") == true );
     REQUIRE( parser.HasFlag("--quit") == true );
     REQUIRE( parser.HasFlag("--area") == false);
-    REQUIRE( parser.HasFlag("-abc") == true);
-    REQUIRE( parser.HasFlag("---abc") == true);
+    REQUIRE( parser.HasFlag("-abc") == false);
+    REQUIRE( parser.HasFlag("---abc") == false);
     REQUIRE( parser.HasFlag("--123") == false);
     REQUIRE( parser.HasFlag("----1234") == false);
-
+    REQUIRE( parser.HasFlag("-1.0") == false);
+    REQUIRE( parser.HasFlag("Some message") == false);
+    
     // Check if HasValue() working properly...
     // .. Check name
     REQUIRE( parser.HasValue("--mode") == true );
